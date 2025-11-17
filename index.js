@@ -8,17 +8,24 @@ import { crawlPeopleIncremental } from './src/jobs/people.js'
 async function main() {
   await initRedis()
 
-  // Run immediately
-  await crawlMoviesIncremental(5000)
-  await crawlTVIncremental(3000)
-  await crawlPeopleIncremental(1000)
+  console.log('🚀 Starting initial TMDB crawl...')
 
-  // Schedule hourly incremental crawl
-  cron.schedule('0 * * * *', async () => {
-    console.log('⏳ Running hourly TMDB incremental crawl...')
-    await crawlMoviesIncremental(5000)
-    await crawlTVIncremental(3000)
-    await crawlPeopleIncremental(1000)
+  // REALISTIC MAX ID LIMITS
+  const MOVIE_MAX_ID = 2_000_000
+  const TV_MAX_ID = 300_000
+  const PERSON_MAX_ID = 2_500_000
+
+  // Run immediately (incremental)
+  await crawlMoviesIncremental(MOVIE_MAX_ID)
+  await crawlTVIncremental(TV_MAX_ID)
+  await crawlPeopleIncremental(PERSON_MAX_ID)
+
+  // Schedule crawl every 6 hours (recommended)
+  cron.schedule('0 */6 * * *', async () => {
+    console.log('⏳ Running scheduled TMDB incremental crawl...')
+    await crawlMoviesIncremental(MOVIE_MAX_ID)
+    await crawlTVIncremental(TV_MAX_ID)
+    await crawlPeopleIncremental(PERSON_MAX_ID)
   })
 }
 
