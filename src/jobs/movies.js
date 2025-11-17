@@ -8,7 +8,7 @@ export async function crawlMoviesIncremental(maxId = 5000) {
   for (let id = lastId + 1; id <= maxId; id++) {
     const movie = await fetchMovieById(id)
     if (movie) {
-      await redisClient.set(`movies:${movie.id}`, JSON.stringify(movie), { EX: 60 * 60 })
+      await redisClient.set(`movies:${movie.id}`, JSON.stringify(movie))
       console.log(`🟩 Movie saved: [${movie.id}] ${movie.title}`)
     } else {
       console.log(`⚪ Movie ID ${id} not found`)

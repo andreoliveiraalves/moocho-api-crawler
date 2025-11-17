@@ -8,7 +8,7 @@ export async function crawlPeopleIncremental(maxId = 1000) {
     for (let id = lastId + 1; id <= maxId; id++) {
         const person = await fetchPersonById(id)
         if (person) {
-            await redisClient.set(`people:${person.id}`, JSON.stringify(person), { EX: 60 * 60 })
+            await redisClient.set(`people:${person.id}`, JSON.stringify(person))
             console.log(`🟩 Person saved: [${person.id}] ${person.name}`)
         } else {
             console.log(`⚪ Person ID ${id} not found`)

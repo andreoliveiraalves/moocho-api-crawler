@@ -8,7 +8,7 @@ export async function crawlTVIncremental(maxId = 3000) {
   for (let id = lastId + 1; id <= maxId; id++) {
     const show = await fetchTVById(id)
     if (show) {
-      await redisClient.set(`tv:${show.id}`, JSON.stringify(show), { EX: 60 * 60 })
+      await redisClient.set(`tv:${show.id}`, JSON.stringify(show))
       console.log(`🟩 TV saved: [${show.id}] ${show.name}`)
     } else {
       console.log(`⚪ TV ID ${id} not found`)
